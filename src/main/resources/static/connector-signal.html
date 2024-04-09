@@ -24,8 +24,17 @@
         #status {
             margin-top: 20px;
         }
+        .circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
         .success {
-            color: green;
+            background-color: green;
+        }
+        .error {
+            background-color: red;
         }
     </style>
 </head>
@@ -37,11 +46,23 @@
         <option value="mongodb">MongoDB</option>
         <option value="s3">AWS S3</option>
     </select>
-    <input type="text" id="url" name="url" placeholder="URL">
+    <input type="text" id="url" name="url" placeholder="hostname">
+    <input type="text" id="username" name="url" placeholder="username">
+    <input type="text" id="password" name="url" placeholder="password">
     <button type="button" onclick="connect()">Connect</button>
 </form>
 
-<div id="status"></div>
+<div id="status">
+    <div class="circle" id="indicator"></div>
+    <span id="statusMessage"></span>
+</div>
+
+<div id="tableSelect" class="hidden">
+    <label for="table">Select Table:</label>
+    <select id="table" onchange="showDashboard()">
+        <!-- Options will be dynamically populated -->
+    </select>
+</div>
 
 <script>
         function connect() {
@@ -59,14 +80,39 @@
                     "Content-Type": "application/json"
                 }
             })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("status").innerHTML = "<p class='success'>" + data + "</p>";
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById("indicator").className = "circle success";
+                    document.getElementById("statusMessage").textContent = "Connected successfully.";
+
+                    // Show the table select dropdown
+                    document.getElementById("tableSelect").classList.remove("hidden");
+
+                    // Populate the select options (you may replace this with actual data)
+                    var select = document.getElementById("table");
+                    select.innerHTML = "";
+                    var options = ["Table 1", "Table 2", "Table 3"];
+                    options.forEach(option => {
+                        var opt = document.createElement("option");
+                        opt.value = option;
+                        opt.textContent = option;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    document.getElementById("indicator").className = "circle error";
+                    document.getElementById("statusMessage").textContent = "Error connecting to the database.";
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById("status").innerHTML = "<p>Error connecting to the database.</p>";
+                document.getElementById("indicator").className = "circle error";
+                document.getElementById("statusMessage").textContent = "Error connecting to the server.";
             });
+        }
+
+         function showDashboard() {
+            var selectedTable = document.getElementById("table").value;
+            window.location.href = "profiling-dashboard.html?table=" + encodeURIComponent(selectedTable);
         }
     </script>
 </body>

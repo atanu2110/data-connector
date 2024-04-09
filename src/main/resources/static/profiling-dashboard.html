@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Governance Profiling Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .card {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            width: 300px;
+        }
+        .card h2 {
+            color: #333;
+        }
+        .metric {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .visualization {
+            height: 200px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Data Governance Profiling Dashboard</h1>
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Data Quality</h2>
+        <div class="metric">85%</div>
+        <div class="visualization" style="background-color: #ffc107;"></div>
+    </div>
+    <div class="card">
+        <h2>Data Completeness</h2>
+        <div class="metric">90%</div>
+        <div class="visualization" style="background-color: #17a2b8;"></div>
+    </div>
+    <div class="card">
+        <h2>Data Consistency</h2>
+        <div class="metric">80%</div>
+        <div class="visualization" style="background-color: #28a745;"></div>
+    </div>
+    <!-- Add more cards for additional metrics -->
+</div>
+</body>
+</html>
