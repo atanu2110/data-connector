@@ -34,10 +34,10 @@ public class SqlConnection implements DataConnector {
                 }
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class SqlConnection implements DataConnector {
                 connection.close();
                 log.info("SQL connection closed.");
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }

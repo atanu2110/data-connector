@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin: 20px;
+        }
+        select {
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 8px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 20px;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<h2>Select Database Type:</h2>
+<form id="databaseForm">
+    <select id="databaseType">
+        <option value="sql">SQL</option>
+        <option value="mongodb">MongoDB</option>
+        <option value="s3">AWS S3</option>
+    </select>
+    <button type="button" onclick="connect()">Connect</button>
+</form>
+
+<div id="status"></div>
+
+<script>
+        function connect() {
+            var selectedDatabase = document.getElementById("databaseType").value;
+            var url = "http://localhost:8080/connect?databaseType=" + selectedDatabase;
+
+            fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("status").innerHTML = "<p class='success'>" + data + "</p>";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("status").innerHTML = "<p>Error connecting to the database.</p>";
+            });
+        }
+    </script>
+</body>
+</html>
