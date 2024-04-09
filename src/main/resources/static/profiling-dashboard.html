@@ -3,67 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Governance Profiling Dashboard</title>
+    <title>Kogwerks - Data Governance Profiling Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: #f8f9fa;
         }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+        .container-fluid {
             padding: 20px;
         }
         .card {
-            background-color: #f4f4f4;
+            border: none;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            padding: 20px;
-            width: 300px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-bottom: 20px;
         }
-        .card h2 {
-            color: #333;
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 20px;
+            border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+            padding: 20px;
         }
         .metric {
-            font-size: 24px;
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 10px;
         }
-        .visualization {
-            height: 200px; /* Adjust height as needed */
+        .chart {
+            height: 300px;
+        }
+        .table-schema {
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-<header>
-    <h1>Data Governance Profiling Dashboard</h1>
-</header>
-<div class="container">
-    <div class="card">
-        <h2>Data Quality</h2>
-        <div class="metric">85%</div>
-        <div class="visualization" style="background-color: #ffc107;"></div>
+
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand mb-0 h1">Kogwerks -Data Governance Profiling Dashboard</span>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Data Quality
+                </div>
+                <div class="card-body">
+                    <div class="metric">85%</div>
+                    <canvas class="chart" id="dataQualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Data Completeness
+                </div>
+                <div class="card-body">
+                    <div class="metric">90%</div>
+                    <canvas class="chart" id="dataCompletenessChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Data Consistency
+                </div>
+                <div class="card-body">
+                    <div class="metric">80%</div>
+                    <canvas class="chart" id="dataConsistencyChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card">
-        <h2>Data Completeness</h2>
-        <div class="metric">90%</div>
-        <div class="visualization" style="background-color: #17a2b8;"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Anomalies Detected
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Data Outliers</td>
+                            <td>High values detected in column 'Revenue'</td>
+                        </tr>
+                        <tr>
+                            <td>Data Inconsistency</td>
+                            <td>Missing values in column 'CustomerID'</td>
+                        </tr>
+                        <!-- Add more rows for additional anomalies -->
+                        </tbody>
+                    </table>
+                    <canvas class="chart" id="anomaliesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    AI/ML Analysis
+                </div>
+                <div class="card-body">
+                    <div class="metric">Done</div>
+                    <p>
+                        The AI/ML analysis leverages advanced algorithms to identify patterns, anomalies, and inconsistencies within the data. By analyzing large datasets, machine learning models can detect trends, outliers, and irregularities that may impact data quality. This analysis enables organizations to understand the overall quality of their data and take proactive measures to improve it.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Table Information
+                </div>
+                <div class="card-body">
+                    <div class="metric">Columns: 10</div>
+                    <div class="metric">Size: 1.5 GB</div>
+                    <div class="table-schema">
+                        <h5>Table Schema:</h5>
+                        <ul>
+                            <li>Column 1: ID (Primary Key)</li>
+                            <li>Column 2: Name</li>
+                            <li>Column 3: Age</li>
+                            <!-- Add more columns as needed -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add more cards for additional metrics -->
     </div>
-    <div class="card">
-        <h2>Data Consistency</h2>
-        <div class="metric">80%</div>
-        <div class="visualization" style="background-color: #28a745;"></div>
-    </div>
-    <!-- Add more cards for additional metrics -->
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+        // Dummy data for charts
+        var dataQualityChart = new Chart(document.getElementById('dataQualityChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Data Quality',
+                    data: [65, 59, 80, 81, 56],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+
+        var dataCompletenessChart = new Chart(document.getElementById('dataCompletenessChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Data Completeness',
+                    data: [55, 69, 70, 91, 76],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+
+        var dataConsistencyChart = new Chart(document.getElementById('dataConsistencyChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Valid', 'Invalid', 'Null'],
+                datasets: [{
+                    data: [300, 50, 100],
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 205, 86, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+
+        var anomaliesChart = new Chart(document.getElementById('anomaliesChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Anomalies Detected',
+                    data: [12, 8, 15, 10, 20],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+    </script>
+
 </body>
 </html>
