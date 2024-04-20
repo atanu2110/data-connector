@@ -1,13 +1,16 @@
 package com.kogwerks.mash.controller;
 
 import com.kogwerks.mash.dto.ConnectionPropertyDto;
+import com.kogwerks.mash.dto.TableProfileDto;
 import com.kogwerks.mash.factory.ConnectorFactory;
 import com.kogwerks.mash.service.DataConnector;
+import com.kogwerks.mash.service.SparkService;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConnectorController {
 
     private Map<String, DataConnector> dataConnectorMap;
+
+    private final SparkService sparkService;
 
     @PostMapping
     public Boolean createConnection(@RequestBody @Valid ConnectionPropertyDto connectionPropertyDto) {
@@ -37,5 +42,10 @@ public class ConnectorController {
         return true;
     }
 
+
+    @GetMapping("/job")
+    public TableProfileDto runJob() {
+        return sparkService.runJob();
+    }
 
 }

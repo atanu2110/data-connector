@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
+    <style>
+        /* Add your CSS styling here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h2>Schema</h2>
+<div id="schema"></div>
+<h2>Missing Values</h2>
+<div id="missing-values"></div>
+<h2>Unique Values</h2>
+<div id="unique-values"></div>
+<h2>Outliers</h2>
+<div id="outliers"></div>
+<h2>Stats</h2>
+<div id="stats"></div>
+
+<script>
+        // Your JSON data here
+        var jsonData = {
+            "schema": {...}, // Your schema data
+            "missingValue": {...}, // Your missing value data
+            "uniqueValue": {...}, // Your unique value data
+            "outliers": {...}, // Your outliers data
+            "stats": {...} // Your statistics data
+        };
+
+        // Function to create a table from JSON data
+        function createTable(data, containerId) {
+            var tableHtml = "<table>";
+            Object.keys(data).forEach(function(key) {
+                tableHtml += "<tr><td>" + key + "</td><td>" + data[key] + "</td></tr>";
+            });
+            tableHtml += "</table>";
+            document.getElementById(containerId).innerHTML = tableHtml;
+        }
+
+        // Display each section of data
+        createTable(jsonData.schema, "schema");
+        createTable(jsonData.missingValue, "missing-values");
+        createTable(jsonData.uniqueValue, "unique-values");
+        createTable(jsonData.outliers, "outliers");
+        createTable(jsonData.stats, "stats");
+    </script>
+</body>
+</html>
