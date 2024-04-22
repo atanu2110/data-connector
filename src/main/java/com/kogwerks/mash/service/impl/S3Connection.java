@@ -1,6 +1,7 @@
 package com.kogwerks.mash.service.impl;
 
 import com.kogwerks.mash.service.DataConnector;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class S3Connection implements DataConnector {
     //private S3Client s3Client;
     @Override
-    public void connect() {
+    public List<String> connect() {
        /* // Connect to AWS S3
         try (S3Client s3Client = S3Client.builder()
             .region(Region.US_EAST_1)
@@ -30,6 +31,7 @@ public class S3Connection implements DataConnector {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+        return List.of();
     }
 
     @Override

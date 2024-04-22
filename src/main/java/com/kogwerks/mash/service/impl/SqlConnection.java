@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ public class SqlConnection implements DataConnector {
     private Connection connection;
 
     @Override
-    public void connect() {
+    public List<String> connect() {
 // Connect to SQL database
         // try (Connection sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "username", "password")) {
 
@@ -28,17 +30,22 @@ public class SqlConnection implements DataConnector {
 
             // Example SQL query
             try (Statement statement = connection.createStatement()) {
-                ResultSet resultSet = statement.executeQuery("SELECT CURRENT_DATE");
+               // ResultSet resultSet = statement.executeQuery("SELECT CURRENT_DATE");
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM pg_catalog.pg_tables order by tablename;");
+               List<String> tables = new ArrayList<>();
                 while (resultSet.next()) {
-                    log.info("SQL Result: " + resultSet.getString("current_date"));
+                   // log.info("SQL Result: " + resultSet.getString("current_date"));
+                    tables.add(resultSet.getString(2));
                 }
                 resultSet.close();
+                return tables;
             } catch (SQLException e) {
                 log.error(e.getMessage());
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.error(e.getMessage());
         }
+        return List.of();
     }
 
     @Override
@@ -53,4 +60,6 @@ public class SqlConnection implements DataConnector {
         }
     }
 
+    // table size
+    // SELECT pg_size_pretty( pg_total_relation_size('mytable') );
 }

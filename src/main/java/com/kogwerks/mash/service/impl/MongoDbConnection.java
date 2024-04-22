@@ -1,6 +1,7 @@
 package com.kogwerks.mash.service.impl;
 
 import com.kogwerks.mash.service.DataConnector;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class MongoDbConnection implements DataConnector {
     //private MongoClient mongoClient;
     @Override
-    public void connect() {
+    public List<String> connect() {
         // Connect to MongoDB
 //        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
 //            System.out.println("Connected to MongoDB successfully.");
@@ -27,6 +28,8 @@ public class MongoDbConnection implements DataConnector {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+
+        return List.of();
     }
 
     @Override
@@ -36,5 +39,4 @@ public class MongoDbConnection implements DataConnector {
             System.out.println("MongoDB connection closed.");
         }*/
     }
-
 }
