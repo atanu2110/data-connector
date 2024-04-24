@@ -1,6 +1,7 @@
 package com.kogwerks.mash.controller;
 
 import com.kogwerks.mash.dto.ColumnStatisticDto;
+import com.kogwerks.mash.dto.DistributionDto;
 import com.kogwerks.mash.dto.TableSchemaDto;
 import com.kogwerks.mash.service.SparkService;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class SparkController {
     }
 
     @GetMapping("/{tableName}/distribution")
-    public String[] getDistribution(@PathVariable("tableName") String tableName) {
+    public DistributionDto getDistribution(@PathVariable("tableName") String tableName) {
         return sparkService.getDistribution(tableName);
     }
 

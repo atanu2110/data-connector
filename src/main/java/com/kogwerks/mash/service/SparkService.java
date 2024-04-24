@@ -2,12 +2,18 @@ package com.kogwerks.mash.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kogwerks.mash.dto.ColumnStatisticDto;
+import com.kogwerks.mash.dto.DistributionDto;
 import com.kogwerks.mash.dto.TableProfileDto;
 import com.kogwerks.mash.dto.TableSchemaDto;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Column;
@@ -419,7 +425,7 @@ public class SparkService {
         return outliers.count();
     }
 
-    public String[] getDistribution(String tableName) {
+    public DistributionDto getDistribution(String tableName) {
         // Create Spark session
         SparkSession spark = SparkSession.builder()
             .appName("Kogwerks-Job").master("local[*]")
@@ -442,6 +448,27 @@ public class SparkService {
         //data.printSchema();
         try {
             String[] summaryStrings = data.describe().showString(100, 0, false).split("\n");
+            String[] columns = summaryStrings[1].split("\\|");
+            List<String> columnsList = Arrays.stream(columns).map(p -> p.trim()).collect(Collectors.toList());
+
+            List<Map<String, String>> rows = new ArrayList<>();
+
+            for (int i = 3; i < summaryStrings.length - 1; i++) {
+                String[] parts = summaryStrings[i].split("\\|");
+
+                if (columns.length != parts.length) {
+                    log.error("Mismatch in keys and values length at row " + i);
+                    continue;
+                }
+                Map<String, String> rowMap = new LinkedHashMap<>();
+                for (int j = 0; j < columns.length; j++) {
+                    rowMap.put(columnsList.get(j).trim(), parts[j].trim());
+                }
+
+                rows.add(rowMap);
+            }
+
+
             // Map<String, Map<String, String>> summaryStats = new HashMap<>();
            /* for (int i = 3; i < summaryStrings.length - 1; i++) {
                 String[] parts = summaryStrings[i].split("\\|");
@@ -454,7 +481,8 @@ public class SparkService {
                 statsMap.put("count", parts[6].trim());
                 summaryStats.put(columnName, statsMap);
             }*/
-            return summaryStrings;
+
+            return DistributionDto.builder().columns(columnsList).rows(rows).build();
         } catch (Exception e) {
             return null;
         }
