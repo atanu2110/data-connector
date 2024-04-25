@@ -338,7 +338,7 @@ public class SparkService {
         String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
 
         // Table name in PostgreSQL
-        tableName = "mytable";
+        tableName = "insurance";
 
         // Read data from PostgreSQL table into Spark DataFrame
         Dataset<Row> data = spark.read()
@@ -379,7 +379,7 @@ public class SparkService {
         String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
 
         // Table name in PostgreSQL
-        tableName = "mytable";
+        tableName = "insurance";
 
         // Read data from PostgreSQL table into Spark DataFrame
         Dataset<Row> data = spark.read()
@@ -391,38 +391,43 @@ public class SparkService {
 
     public Long getOutliers(String tableName, String columnName) {
 
-        // Create Spark session
-        SparkSession spark = SparkSession.builder()
-            .appName("Kogwerks-Job").master("local[*]")
-            .getOrCreate();
+        try{
+            // Create Spark session
+            SparkSession spark = SparkSession.builder()
+                .appName("Kogwerks-Job").master("local[*]")
+                .getOrCreate();
 
-        // JDBC connection properties
-        Properties connectionProperties = new Properties();
-        connectionProperties.put("user", "admin");
-        connectionProperties.put("password", "admin");
+            // JDBC connection properties
+            Properties connectionProperties = new Properties();
+            connectionProperties.put("user", "admin");
+            connectionProperties.put("password", "admin");
 
-        // JDBC URL to connect to PostgreSQL
-        String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
+            // JDBC URL to connect to PostgreSQL
+            String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
 
-        // Table name in PostgreSQL
-        tableName = "mytable";
+            // Table name in PostgreSQL
+            tableName = "insurance";
 
-        // Read data from PostgreSQL table into Spark DataFrame
-        Dataset<Row> data = spark.read()
-            .jdbc(jdbcUrl, tableName, connectionProperties);
+            // Read data from PostgreSQL table into Spark DataFrame
+            Dataset<Row> data = spark.read()
+                .jdbc(jdbcUrl, tableName, connectionProperties);
 
-        double[] percentiles = {0.01, 0.99};
-        var quantiles = data.stat().approxQuantile("charges", percentiles, 0.0);
-        var lower_bound = quantiles[0];
-        var upper_bound = quantiles[1];
+            double[] percentiles = {0.01, 0.99};
+            var quantiles = data.stat().approxQuantile(columnName, percentiles, 0.0);
+            var lower_bound = quantiles[0];
+            var upper_bound = quantiles[1];
 
-        log.info("Lower Bound : {}", lower_bound);
-        log.info("Upper Bound : {}", upper_bound);
-        //var outliers = data.filter((col("unit_price") == lower_bound) || (data["unit_price"] > upper_bound));
-        var outliers = data.filter(data.col("charges").$less$eq(lower_bound)
-            .or(data.col("charges").$greater$eq(upper_bound)));
+            log.info("Lower Bound : {}", lower_bound);
+            log.info("Upper Bound : {}", upper_bound);
+            //var outliers = data.filter((col("unit_price") == lower_bound) || (data["unit_price"] > upper_bound));
+            var outliers = data.filter(data.col(columnName).$less$eq(lower_bound)
+                .or(data.col(columnName).$greater$eq(upper_bound)));
 
-        return outliers.count();
+            return outliers.count();
+        } catch (Exception e) {
+            //log.error(e.getMessage());
+            return 0L;
+        }
     }
 
     public DistributionDto getDistribution(String tableName) {
@@ -440,7 +445,7 @@ public class SparkService {
         String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
 
         // Table name in PostgreSQL
-        tableName = "mytable";
+        tableName = "insurance";
 
         // Read data from PostgreSQL table into Spark DataFrame
         Dataset<Row> data = spark.read()
@@ -504,7 +509,7 @@ public class SparkService {
         String jdbcUrl = "jdbc:postgresql://localhost:5432/hawks";
 
         // Table name in PostgreSQL
-        tableName = "mytable";
+        tableName = "insurance";
 
         // Read data from PostgreSQL table into Spark DataFrame
         Dataset<Row> data = spark.read()
@@ -521,7 +526,16 @@ public class SparkService {
             .uniqueValuesCount(uniqueValuesCount != totalRows ? String.valueOf(uniqueValuesCount) : "").build();
 
         //Categorical value distributions
-        columnStatisticDto.setCategoricalCount(data.groupBy(columnName).count().showString(100, 0, false));
+        String[] categoricalStrings = data.groupBy(columnName).count().showString(100, 0, false).split("\n");
+        Map<String, String> rowMap = new LinkedHashMap<>();
+        for (int i = 3; i < categoricalStrings.length - 1; i++) {
+            String[] parts = categoricalStrings[i].split("\\|");
+            if (parts.length > 1) {
+                rowMap.put(parts[1].trim(), parts[2].trim());
+            }
+        }
+
+        columnStatisticDto.setCategoricalCount(rowMap);
 
         log.info("Data Quality Percentage:");
         Column nonNullCount = functions.sum(functions.when(data.col(columnName).isNotNull(), 1).otherwise(0));
